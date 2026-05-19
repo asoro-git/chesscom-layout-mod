@@ -1,7 +1,6 @@
 /**
  * Advanced Puzzle Engine: Snapshot-Locked Finite State Machine
  * Context: Injected Main-World Runtime Thread
- * Architecture: Native DOM Hijack, Event-Driven SPA Router Hijack, Auto-Next FSM
  */
 (() => {
   // --- 1. STATE MACHINE & LOCK CONFIGURATION ---
@@ -78,10 +77,18 @@
       effectiveVerticalOffset: compactViewport ? 0 : verticalOffset,
       sidebarLeft: shouldDockCompactSidebar
         ? Math.round((viewportWidth - sidebarWidth) / 2)
-        : clamp(sidebarX, edgePadding, viewportWidth - sidebarWidth - edgePadding),
+        : clamp(
+            sidebarX,
+            edgePadding,
+            viewportWidth - sidebarWidth - edgePadding,
+          ),
       sidebarTop: shouldDockCompactSidebar
         ? viewportHeight - sidebarHeight - edgePadding
-        : clamp(sidebarY, edgePadding, viewportHeight - sidebarHeight - edgePadding),
+        : clamp(
+            sidebarY,
+            edgePadding,
+            viewportHeight - sidebarHeight - edgePadding,
+          ),
     };
   };
 
@@ -89,10 +96,6 @@
     document.getElementById("board-layout-sidebar") ||
     document.querySelector(".board-layout-sidebar");
 
-  // ========================================================================
-  // 🚀 EVENT-DRIVEN SPA ROUTER HIJACK
-  // Instead of scanning the URL, we intercept the browser's navigation engine.
-  // ========================================================================
   const handleSPANavigation = () => {
     console.log("[FSM System] SPA Page Turn Detected. Resetting memory locks.");
     puzzleState = "calculating";
@@ -103,20 +106,17 @@
   // Listen for standard back/forward button clicks
   window.addEventListener("popstate", handleSPANavigation);
 
-  // Hijack the SPA "push" (going to a new page)
   const originalPushState = history.pushState;
   history.pushState = function () {
     originalPushState.apply(this, arguments);
     handleSPANavigation();
   };
 
-  // Hijack the SPA "replace" (redirecting)
   const originalReplaceState = history.replaceState;
   history.replaceState = function () {
     originalReplaceState.apply(this, arguments);
     handleSPANavigation();
   };
-  // ========================================================================
 
   /**
    * Intent Enforcement Gate
@@ -403,7 +403,10 @@
       sidebarViewMode !== "all" || isManuallyPositioned || hasMapPath;
 
     if (lastSidebarPositioned !== shouldPositionSidebar) {
-      document.body.classList.toggle("sidebar-is-positioned", shouldPositionSidebar);
+      document.body.classList.toggle(
+        "sidebar-is-positioned",
+        shouldPositionSidebar,
+      );
       lastSidebarPositioned = shouldPositionSidebar;
     }
 
