@@ -353,7 +353,7 @@
       .learning-sidebar-start-button, [data-cy="start-button"] { display: flex !important; width: 100% !important; min-height: 48px !important; visibility: visible !important; opacity: 1 !important; }
       .board-layout-main-2, #board-layout-main-2 { display: none !important; }
       
-      #custom-draggable-panel { opacity: 0.15; transform: scale(0.98); transition: opacity 0.2s ease-in-out, transform 0.2s ease-in-out; }
+      #custom-draggable-panel { opacity: 0.15; transform: scale(0.98); transform-origin: top left; transition: opacity 0.2s ease-in-out, transform 0.2s ease-in-out; }
       #custom-draggable-panel:hover { opacity: 1 !important; transform: scale(1) !important; background-color: rgba(20, 20, 20, 0.98) !important; }
       body[data-sidebar-folded="true"] #board-layout-sidebar, body[data-sidebar-folded="true"] .board-layout-sidebar { display: none !important; }
 
@@ -417,11 +417,15 @@
           transform: translate(${effectiveHorizontalOffset}px, ${effectiveVerticalOffset}px) !important;
         }
         #board-layout-chessboard, .board-layout-chessboard, #board-primary, wc-chess-board {
-          width: ${effectiveBoardSize}px !important; 
+          width: ${effectiveBoardSize}px !important;
           height: ${effectiveBoardSize}px !important;
           max-width: none !important;
           max-height: none !important;
           transform: none !important;
+        }
+        .evaluation-bar-bar, [class*="evaluation-bar-bar"] {
+          height: ${effectiveBoardSize}px !important;
+          max-height: ${effectiveBoardSize}px !important;
         }
         #board-layout-sidebar, .board-layout-sidebar {
           position: fixed !important;
@@ -515,11 +519,10 @@
       if (["INPUT", "BUTTON", "LABEL", "A", "SPAN"].includes(e.target.tagName))
         return;
       isPanelDragging = true;
-      const rect = overlay.getBoundingClientRect();
       pStartX = e.clientX;
       pStartY = e.clientY;
-      pInitialLeft = rect.left;
-      pInitialTop = rect.top;
+      pInitialLeft = parseFloat(overlay.style.left) || 15;
+      pInitialTop = parseFloat(overlay.style.top) || 15;
       overlay.style.transition = "none";
       e.preventDefault();
     },

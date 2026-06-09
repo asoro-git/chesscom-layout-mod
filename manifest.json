@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "Advanced Chesscom Puzzle Layout",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Runtime Tracker and Layout Modifier for Chess.com Puzzles and Rapids (toggle on off in extension panel).",
   "permissions": ["storage"],
   "action": {
